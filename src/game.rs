@@ -3,12 +3,17 @@ use piston::event_loop::*;
 use piston::input::*;
 use glutin_window::GlutinWindow as Window;
 use opengl_graphics::{ GlGraphics, OpenGL };
+use fps_counter::FPSCounter;
 use Config;
 
 pub struct Game {
     window: Window,
     gl: GlGraphics,
     config: Config,
+    fps_counter: FPSCounter,
+    ups_counter: FPSCounter,
+    last_fps: u16,
+    last_ups: u16,
     rotation: f64,
 }
 
@@ -34,6 +39,10 @@ impl Game {
             window: window,
             gl: GlGraphics::new(opengl),
             config: config,
+            fps_counter: FPSCounter::new(),
+            ups_counter: FPSCounter::new(),
+            last_fps: 0,
+            last_ups: 0,
             rotation: 0.0
         }
     }
@@ -44,6 +53,7 @@ impl Game {
             .ups(*self.config.max_ups() as u64)
             .swap_buffers(true)
         );
+
         if *self.config.debug_general() {
             println!("[GENERAL] game start running");
         }
@@ -74,7 +84,6 @@ impl Game {
         let rotation = self.rotation;
         let (x, y) = ((args.width / 2) as f64,
                       (args.height / 2) as f64);
-
         self.gl.draw(args.viewport(), |c, gl| {
             // Clear the screen.
             clear(GREEN, gl);
@@ -84,12 +93,24 @@ impl Game {
                                        .trans(-25.0, -25.0);
 
             // Draw a box rotating around the middle of the screen.
-            rectangle(RED, square, transform, gl);
+            rectangle(RED, square, transform, gl);        
         });
+
+        self.last_fps = self.fps_counter.tick() as u16;
+
+        if *self.config.show_dev_info() {
+            println!("[GENERAL] fps={}", self.last_fps);
+        }    
     }
 
     fn update(&mut self, args: &UpdateArgs) {
         // Rotate 2 radians per second.
         self.rotation += 2.0 * args.dt;
+
+        self.last_ups = self.ups_counter.tick() as u16;
+
+        if *self.config.show_dev_info() {
+            println!("[GENERAL] ups={}", self.last_ups);
+        }    
     }
 }

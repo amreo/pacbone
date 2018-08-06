@@ -5,6 +5,8 @@ extern crate piston;
 extern crate graphics;
 extern crate glutin_window;
 extern crate opengl_graphics;
+extern crate fps_counter;
+
 
 pub use game::Game;
 pub mod game;
