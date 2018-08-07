@@ -9,6 +9,9 @@ pub struct Config {
     #[builder(default = "false")]
     #[get = "pub"]
     debug_graphics: bool,
+    #[builder(default = "false")]
+    #[get = "pub"]
+    debug_input: bool,
     #[builder(default = "true")]
     #[get = "pub"]
     fullscreen: bool,

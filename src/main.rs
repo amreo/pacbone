@@ -27,6 +27,11 @@ fn apply_command_line_arguments(config: &mut ConfigBuilder) -> Result<(), Box<Er
             .value_name("debug_graphics")
             .help("Enable or disable the graphics debugging")
             .takes_value(true))
+        .arg(Arg::with_name("debug_input")
+            .long("debug-input")
+            .value_name("debug_input")
+            .help("Enable or disable the input debugging")
+            .takes_value(true))
         .arg(Arg::with_name("fullscreen")
             .long("fullscreen")
             .value_name("fullscreen")
@@ -76,6 +81,10 @@ fn apply_command_line_arguments(config: &mut ConfigBuilder) -> Result<(), Box<Er
         Some(val) => { config.debug_graphics(bool::from_str(val)?); },
         None => { }
     }
+    match matches.value_of("debug_input") {
+        Some(val) => { config.debug_input(bool::from_str(val)?); },
+        None => { }
+    }
     match matches.value_of("fullscreen") {
         Some(val) => { config.fullscreen(bool::from_str(val)?); },
         None => { }
@@ -113,6 +122,7 @@ fn load_settings(cfg: &mut ConfigBuilder) -> Result<(), ConfigError> {
     settings.set_default("debug_general", "false")?
         .set_default("debug_piston", "false")?
         .set_default("debug_graphics", "false")?
+        .set_default("debug_input", "false")?
         .set_default("fullscreen", "true")?
         .set_default("max_fps", "120")?
         .set_default("max_ups", "120")?
@@ -125,6 +135,7 @@ fn load_settings(cfg: &mut ConfigBuilder) -> Result<(), ConfigError> {
     cfg.debug_general(settings.get::<bool>("debug_general")?)
         .debug_piston(settings.get::<bool>("debug_piston")?)
         .debug_graphics(settings.get::<bool>("debug_graphics")?)
+        .debug_input(settings.get::<bool>("debug_input")?)
         .fullscreen(settings.get::<bool>("fullscreen")?)
         .max_fps(settings.get::<u16>("max_fps")?)
         .max_ups(settings.get::<u16>("max_ups")?)
