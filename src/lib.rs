@@ -11,6 +11,7 @@ pub use config::Config;
 pub use config::ConfigBuilder;
 pub mod config;
 mod graphic_resources;
+mod scene;
 
 use piston::window::WindowSettings;
 use piston::event_loop::*;
